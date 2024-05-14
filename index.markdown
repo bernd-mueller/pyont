@@ -5,4 +5,7 @@
 layout: home
 ---
 
-Test 123
+The Python Ontology Project makes use of the python libraries rdflib and OwlReady2 for processing
+graphs in RDF and OWL format. rdflib incorporates methods for processing SPARQL queries on RDF.
+The OwlReady2 provides features to describe classes with their properties in OWL format. Examples
+for each of the libraries are implemented in the package de.zbmed.semtec.pyont.
