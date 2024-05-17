@@ -3,6 +3,7 @@ from pandas import DataFrame
 
 from SPARQLWrapper import SPARQLWrapper, JSON
 
+
 def wrapperQuery ():
     pref = """
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -29,7 +30,7 @@ def wrapperQuery ():
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
     
-    print (results)
+    # print (results)
     for result in results["results"]["bindings"]:
         print(result)
     
