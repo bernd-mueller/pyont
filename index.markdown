@@ -10,6 +10,6 @@ graphs in RDF and OWL format. rdflib incorporates methods for processing SPARQL 
 The OwlReady2 provides features to describe classes with their properties in OWL format. Examples
 for each of the libraries are implemented in the package de.zbmed.semtec.pyont.
 
-As example for processing a common RDF file, the current MeSH terminology is taken in turtle format for parsing
-it with RDFlib. The MeSH terminology in turtle format has uncompressed a file size of 1.9 GB. The time for 
-parsing takes about 19 minutes on a Lenovo Thinkbook.
+# As example for processing a common RDF file, the current MeSH terminology is taken in turtle format for parsing
+# it with RDFlib. The MeSH terminology in turtle format has uncompressed a file size of 1.9 GB. The time for 
+# parsing takes about 19 minutes on a Lenovo Thinkbook.
