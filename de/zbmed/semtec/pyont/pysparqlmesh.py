@@ -1,7 +1,10 @@
+import json
+from sys import getsizeof
 from rdflib import Graph
+
 from pandas import DataFrame
 
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper, JSON, RDFXML, RDF
 
 
 def wrapperQuery ():
@@ -16,6 +19,7 @@ def wrapperQuery ():
         PREFIX mesh2023: <http://id.nlm.nih.gov/mesh/2023/>
         PREFIX mesh2022: <http://id.nlm.nih.gov/mesh/2022/>
         """
+    
     sparql = SPARQLWrapper("http://id.nlm.nih.gov/mesh/sparql")
     sparql.setQuery(pref + """        
         SELECT * 
@@ -26,21 +30,28 @@ def wrapperQuery ():
         }         
     """)
     
-    print(sparql)
     sparql.setReturnFormat(JSON)
+    print(sparql)
     results = sparql.query().convert()
     
-    # print (results)
+    j = ""
+    print ("--- ", results)
     for result in results["results"]["bindings"]:
-        print(result)
-    
-    
+        print (result["pa"]["value"] + " " + result["paLabel"]["value"])
+        print()
+        s = str(result)
+        # print("### ", s)
+        j += s
+
+    print(j)
+    print("--- Trying to parse RDF/XML...")
+    g = Graph()
+    g.parse(data=json.dumps(j), format="json-ld")
+    print("--- Printing RDF ---")
+    print(g.serialize(format="xml"))    
     
 def conductQuery ():
-    print('asd')
-    g = Graph()
-    qres = g.query(
-        """
+    pref = """
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -50,20 +61,25 @@ def conductQuery ():
         PREFIX mesh2024: <http://id.nlm.nih.gov/mesh/2024/>
         PREFIX mesh2023: <http://id.nlm.nih.gov/mesh/2023/>
         PREFIX mesh2022: <http://id.nlm.nih.gov/mesh/2022/>
-        
-        SELECT distinct ?d ?dLabel 
-        FROM <http://id.nlm.nih.gov/mesh>
-        WHERE {
-          ?d meshv:allowableQualifier ?q .
-          ?q rdfs:label 'adverse effects'@en . 
-          ?d rdfs:label ?dLabel . 
-        } 
-        ORDER BY ?dLabel 
         """
-    )
-    print(qres)
+
+    g = Graph()
+    q = """
+        SELECT *
+        WHERE {
+                SERVICE <http://id.nlm.nih.gov/mesh/sparql> {
+                    mesh:D015242 meshv:pharmacologicalAction ?pa .
+                    ?pa rdfs:label ?paLabel .
+                }
+        }         
+    """
+    qres = g.query(pref + q)
+
+    print(qres.bindings)
+    #for row in qres:
+    #    print(row.s)
 
 
 if __name__ == '__main__':
     wrapperQuery()
-    #conductQuery()
+    # conductQuery()
