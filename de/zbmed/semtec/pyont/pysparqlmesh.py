@@ -1,7 +1,7 @@
 import json
 from sys import getsizeof
-from rdflib import Graph
-
+from rdflib import RDFS, Graph, Literal, URIRef
+from rdflib.namespace import RDF
 from pandas import DataFrame
 
 from SPARQLWrapper import SPARQLWrapper, JSON, RDFXML, RDF
@@ -34,21 +34,21 @@ def wrapperQuery ():
     print(sparql)
     results = sparql.query().convert()
     
-    j = ""
+    g = Graph()
+    d = URIRef("http://id.nlm.nih.gov/mesh/D015242")
+    a = URIRef("http://id.nlm.nih.gov/mesh/vocab#pharmacologicalAction")
+
     print ("--- ", results)
     for result in results["results"]["bindings"]:
-        print (result["pa"]["value"] + " " + result["paLabel"]["value"])
-        print()
-        s = str(result)
-        # print("### ", s)
-        j += s
+        pa = URIRef(result["pa"]["value"])
+        print("pa: ", pa)
+        paLabel = Literal(result["paLabel"]["value"])
+        print("paLabel: ", paLabel)
+        g.add((d, a, pa))
+        g.add((pa, RDFS.label, paLabel))
 
-    print(j)
-    print("--- Trying to parse RDF/XML...")
-    g = Graph()
-    g.parse(data=json.dumps(j), format="json-ld")
     print("--- Printing RDF ---")
-    print(g.serialize(format="xml"))    
+    print(g.serialize(format="turtle"))
     
 def conductQuery ():
     pref = """
