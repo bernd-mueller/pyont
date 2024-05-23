@@ -48,7 +48,8 @@ def wrapperQuery ():
         g.add((pa, RDFS.label, paLabel))
 
     print("--- Printing RDF ---")
-    print(g.serialize(format="turtle"))
+    # print(g.serialize(format="turtle"))
+    g.serialize(format="xml", destination="pa.xml")
     
 def conductQuery ():
     pref = """
