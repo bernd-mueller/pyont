@@ -12,7 +12,7 @@ for each of the libraries are implemented in the package de.zbmed.semtec.pyont.
 
 This repository is maintained by
 <ul>
-{% for member in site.data.dat %}
+{% for member in site.docs.data.dat %}
   <li>
     <a href="https://github.com/{{ member.github }}">
       {{ member.name }}
